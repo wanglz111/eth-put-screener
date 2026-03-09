@@ -1,0 +1,31 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "option-put",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-03-09",
+	"assets": {
+		"directory": "./public",
+		"binding": "ASSETS",
+		"run_worker_first": [
+			"/api/*"
+		]
+	},
+	"triggers": {
+		"crons": [
+			"0 */4 * * *"
+		]
+	},
+	"kv_namespaces": [
+		{
+			"binding": "OPTION_PUT_CACHE",
+			"id": "3c13d7b932354e0b88b17b33f27251fe",
+			"preview_id": "59a7107f55934a9e8e717a81db7f0030",
+			"remote": true
+		}
+	],
+	"vars": {
+		"DERIBIT_API_BASE": "https://www.deribit.com",
+		"RISK_FREE_RATE": "0.02",
+		"UNDERLYING": "ETH"
+	}
+}

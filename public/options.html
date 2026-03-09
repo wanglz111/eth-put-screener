@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ETH Put Options Snapshot</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <p class="eyebrow">Cloudflare Worker MVP</p>
+        <h1>All ETH Put Options</h1>
+        <p class="lede">
+          Full normalized options snapshot with front-end filtering. Data is still precomputed by the Worker.
+        </p>
+        <div class="hero-actions">
+          <button id="reload-options-button" class="button" type="button">Reload Snapshot</button>
+          <a class="button button-secondary" href="/">Back To Dashboard</a>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-header">
+          <h2>Filters</h2>
+          <p id="results-meta" class="muted">Loading options snapshot...</p>
+        </div>
+        <form id="filters" class="filters">
+          <label class="field">
+            <span>Search</span>
+            <input id="search" name="search" type="text" placeholder="Instrument or expiry">
+          </label>
+          <label class="field">
+            <span>Min DTE</span>
+            <input id="min-dte" name="minDte" type="number" min="0" placeholder="0">
+          </label>
+          <label class="field">
+            <span>Max DTE</span>
+            <input id="max-dte" name="maxDte" type="number" min="0" placeholder="365">
+          </label>
+          <label class="field">
+            <span>Min IV</span>
+            <input id="min-iv" name="minIv" type="number" min="0" step="0.01" placeholder="0.00">
+          </label>
+          <label class="field">
+            <span>Min Yield</span>
+            <input id="min-yield" name="minYield" type="number" min="0" step="0.001" placeholder="0.000">
+          </label>
+          <label class="field">
+            <span>Min |Delta|</span>
+            <input id="min-delta" name="minDelta" type="number" min="0" step="0.01" placeholder="0.00">
+          </label>
+          <label class="field">
+            <span>Max |Delta|</span>
+            <input id="max-delta" name="maxDelta" type="number" min="0" step="0.01" placeholder="1.00">
+          </label>
+          <label class="field">
+            <span>Strict Only</span>
+            <select id="strict-only" name="strictOnly">
+              <option value="all">All</option>
+              <option value="strict">Strict Pass Only</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Sort</span>
+            <select id="sort-by" name="sortBy">
+              <option value="score_desc">Score desc</option>
+              <option value="yield_desc">Yield desc</option>
+              <option value="dte_asc">DTE asc</option>
+              <option value="strike_asc">Strike asc</option>
+              <option value="iv_desc">IV desc</option>
+            </select>
+          </label>
+          <div class="field actions">
+            <span>&nbsp;</span>
+            <button id="reset-filters" class="button button-secondary" type="button">Reset</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel">
+        <div class="section-header">
+          <h2>Option Snapshot</h2>
+          <p class="muted">Client-side filtering only. No extra compute on the Worker.</p>
+        </div>
+        <div class="table-wrap">
+          <table class="options-table">
+            <thead>
+              <tr>
+                <th>Instrument</th>
+                <th>Expiry</th>
+                <th>DTE</th>
+                <th>Strike</th>
+                <th>Premium</th>
+                <th>IV</th>
+                <th>Delta</th>
+                <th>|Delta|</th>
+                <th>Yield</th>
+                <th>Annualized</th>
+                <th>Score</th>
+                <th>Strict</th>
+              </tr>
+            </thead>
+            <tbody id="options-table-body">
+              <tr>
+                <td class="muted" colspan="12">Loading options snapshot...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="/options.js" type="module"></script>
+  </body>
+</html>
+

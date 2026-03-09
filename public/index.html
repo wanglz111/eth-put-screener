@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ETH Put Screener</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <p class="eyebrow">Cloudflare Worker MVP</p>
+        <h1>ETH Put Screener</h1>
+        <p class="lede">
+          Precomputed ETH cash-secured put recommendations with a KV-first read path.
+        </p>
+        <div class="hero-actions">
+          <button id="reload-button" class="button" type="button">Reload Snapshot</button>
+          <a class="button button-secondary" href="/options.html">View All Options</a>
+        </div>
+      </section>
+
+      <section class="grid">
+        <article class="panel">
+          <h2>Market</h2>
+          <div id="market" class="stack">
+            <p class="muted">Loading market snapshot...</p>
+          </div>
+        </article>
+
+        <article class="panel">
+          <h2>Refresh Status</h2>
+          <div id="status" class="stack">
+            <p class="muted">Loading refresh status...</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="section-header">
+          <h2>Top Recommendations</h2>
+          <p class="muted">ETH puts only. No auto-refresh polling.</p>
+        </div>
+        <div id="recommendations" class="cards">
+          <p class="muted">Loading recommendations...</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
