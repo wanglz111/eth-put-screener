@@ -1,5 +1,6 @@
 import type { Env } from "../types/env";
 import type { OptionContract } from "../types/option";
+import { getDeribitBaseUrl } from "./deribit";
 
 interface DeribitBookSummaryItem {
   instrument_name?: string;
@@ -10,10 +11,6 @@ interface DeribitBookSummaryItem {
 
 interface DeribitBookSummaryResponse {
   result?: DeribitBookSummaryItem[];
-}
-
-function getBaseUrl(env: Env): string {
-  return env.DERIBIT_API_BASE ?? "https://www.deribit.com";
 }
 
 function parseDeribitDate(value: string): Date {
@@ -95,12 +92,15 @@ function parseInstrument(
   };
 }
 
-export async function fetchEthOptionChain(env: Env): Promise<OptionContract[]> {
-  const url = new URL("/api/v2/public/get_book_summary_by_currency", getBaseUrl(env));
+export async function fetchEthOptionChain(
+  env: Env,
+  headers?: HeadersInit
+): Promise<OptionContract[]> {
+  const url = new URL("/api/v2/public/get_book_summary_by_currency", getDeribitBaseUrl(env));
   url.searchParams.set("currency", "ETH");
   url.searchParams.set("kind", "option");
 
-  const response = await fetch(url);
+  const response = await fetch(url, headers ? { headers } : undefined);
   if (!response.ok) {
     throw new Error(`Option chain request failed with status ${response.status}`);
   }
@@ -113,4 +113,3 @@ export async function fetchEthOptionChain(env: Env): Promise<OptionContract[]> {
 
   return contracts.filter((contract) => contract.optionType === "put");
 }
-

@@ -10,11 +10,6 @@
 			"/api/*"
 		]
 	},
-	"triggers": {
-		"crons": [
-			"0 */4 * * *"
-		]
-	},
 	"kv_namespaces": [
 		{
 			"binding": "OPTION_PUT_CACHE",

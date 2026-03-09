@@ -8,8 +8,11 @@ export interface Env {
   OPTION_PUT_CACHE: KVNamespace;
   ASSETS?: AssetFetcher;
   DERIBIT_API_BASE?: string;
+  DERIBIT_CLIENT_ID?: string;
+  DERIBIT_CLIENT_SECRET?: string;
   RISK_FREE_RATE?: string;
   UNDERLYING?: string;
+  CACHE_IMPORT_TOKEN?: string;
   MANUAL_REFRESH_TOKEN?: string;
 }
 
@@ -26,4 +29,3 @@ export const DEFAULT_CONFIG: StrategyConfig = {
   minPositionYield: 0.02,
   targetTopN: 3
 };
-

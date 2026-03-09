@@ -1,0 +1,33 @@
+name: Refresh Remote Cache
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */4 * * *"
+
+jobs:
+  refresh-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Refresh and import snapshot
+        run: npm run refresh:push
+        env:
+          WORKER_BASE_URL: ${{ secrets.WORKER_BASE_URL }}
+          CACHE_IMPORT_TOKEN: ${{ secrets.CACHE_IMPORT_TOKEN }}
+          DERIBIT_CLIENT_ID: ${{ secrets.DERIBIT_CLIENT_ID }}
+          DERIBIT_CLIENT_SECRET: ${{ secrets.DERIBIT_CLIENT_SECRET }}
+          DERIBIT_API_BASE: https://www.deribit.com
+          RISK_FREE_RATE: "0.02"
+          UNDERLYING: ETH

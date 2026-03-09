@@ -1,16 +1,17 @@
 import { Hono } from "hono";
 import healthRoute from "./routes/health";
+import importCacheRoute from "./routes/importCache";
 import marketRoute from "./routes/market";
 import optionsRoute from "./routes/options";
 import recommendationsRoute from "./routes/recommendations";
 import refreshRoute from "./routes/refresh";
 import statusRoute from "./routes/status";
-import { refreshMarketData } from "./jobs/refreshMarketData";
-import type { AppBindings, Env } from "./types/env";
+import type { AppBindings } from "./types/env";
 
 const app = new Hono<AppBindings>();
 
 app.route("/api/health", healthRoute);
+app.route("/api/import-cache", importCacheRoute);
 app.route("/api/market/latest", marketRoute);
 app.route("/api/options", optionsRoute);
 app.route("/api/recommendations", recommendationsRoute);
@@ -39,13 +40,6 @@ app.notFound((c) => {
   );
 });
 
-async function handleScheduled(env: Env): Promise<void> {
-  await refreshMarketData(env);
-}
-
 export default {
-  fetch: app.fetch,
-  scheduled(_event: ScheduledController, env: Env, ctx: ExecutionContext) {
-    ctx.waitUntil(handleScheduled(env));
-  }
+  fetch: app.fetch
 };

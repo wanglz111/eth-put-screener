@@ -40,3 +40,10 @@ export interface RefreshStatus {
   provider: string;
   message: string;
 }
+
+export interface SnapshotBundle {
+  market: MarketSnapshot;
+  options: OptionsSnapshotPayload;
+  recommendations: RecommendationsPayload;
+  status: RefreshStatus;
+}

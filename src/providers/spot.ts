@@ -1,4 +1,5 @@
 import type { Env } from "../types/env";
+import { getDeribitBaseUrl } from "./deribit";
 
 interface DeribitIndexPriceResponse {
   result?: {
@@ -6,15 +7,11 @@ interface DeribitIndexPriceResponse {
   };
 }
 
-function getBaseUrl(env: Env): string {
-  return env.DERIBIT_API_BASE ?? "https://www.deribit.com";
-}
-
-export async function fetchEthSpotPrice(env: Env): Promise<number> {
-  const url = new URL("/api/v2/public/get_index_price", getBaseUrl(env));
+export async function fetchEthSpotPrice(env: Env, headers?: HeadersInit): Promise<number> {
+  const url = new URL("/api/v2/public/get_index_price", getDeribitBaseUrl(env));
   url.searchParams.set("index_name", "eth_usd");
 
-  const response = await fetch(url);
+  const response = await fetch(url, headers ? { headers } : undefined);
   if (!response.ok) {
     throw new Error(`Spot price request failed with status ${response.status}`);
   }
@@ -28,4 +25,3 @@ export async function fetchEthSpotPrice(env: Env): Promise<number> {
 
   return spotPrice;
 }
-
