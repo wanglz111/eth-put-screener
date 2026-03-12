@@ -124,11 +124,6 @@ async function loadDashboard() {
 }
 
 async function forceRefresh() {
-  const token = prompt("Enter refresh token:");
-  if (!token) {
-    return;
-  }
-
   forceRefreshButton.disabled = true;
   forceRefreshButton.textContent = "Refreshing...";
 
@@ -136,7 +131,6 @@ async function forceRefresh() {
     const response = await fetch("/api/refresh", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${token}`,
         "Accept": "application/json"
       }
     });

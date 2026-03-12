@@ -8,30 +8,6 @@ const RATE_LIMIT_KEY = "manual_refresh_last_time";
 const RATE_LIMIT_SECONDS = 60;
 
 refreshRoute.post("/", async (c) => {
-  const expectedToken = c.env.MANUAL_REFRESH_TOKEN;
-  if (!expectedToken) {
-    return c.json(
-      {
-        ok: false,
-        message: "MANUAL_REFRESH_TOKEN is not configured."
-      },
-      403
-    );
-  }
-
-  const authorization = c.req.header("authorization");
-  const token = authorization?.replace(/^Bearer\s+/i, "");
-
-  if (token !== expectedToken) {
-    return c.json(
-      {
-        ok: false,
-        message: "Unauthorized"
-      },
-      401
-    );
-  }
-
   // 检查限流
   const lastRefreshTime = await c.env.OPTION_PUT_CACHE.get(RATE_LIMIT_KEY);
   const now = Date.now();
