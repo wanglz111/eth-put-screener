@@ -3,7 +3,7 @@ name: Refresh Remote Cache
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 */4 * * *"
+    - cron: "*/15 * * * *"
 
 jobs:
   refresh-cache:
@@ -29,5 +29,4 @@ jobs:
           DERIBIT_CLIENT_ID: ${{ secrets.DERIBIT_CLIENT_ID }}
           DERIBIT_CLIENT_SECRET: ${{ secrets.DERIBIT_CLIENT_SECRET }}
           DERIBIT_API_BASE: https://www.deribit.com
-          RISK_FREE_RATE: "0.02"
           UNDERLYING: ETH

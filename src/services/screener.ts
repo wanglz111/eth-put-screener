@@ -44,6 +44,10 @@ function buildCandidate(
   const positionYield = contract.premiumUsd / contract.strike;
   const annualizedYield = positionYield * (365 / Math.max(contract.dte, 1));
 
+  // 计算有效买入价和折扣率
+  const effectiveBuyPrice = contract.strike - contract.premiumUsd;
+  const priceDiscount = (spotPrice - effectiveBuyPrice) / spotPrice;
+
   return {
     rank: 0,
     expiry: contract.expiry,
@@ -58,6 +62,8 @@ function buildCandidate(
     assignmentProbabilityProxy: Number(absDelta.toFixed(4)),
     instrumentName: contract.instrumentName,
     source: contract.source,
+    effectiveBuyPrice: Number(effectiveBuyPrice.toFixed(2)),
+    priceDiscount: Number(priceDiscount.toFixed(4)),
     absDelta
   };
 }
@@ -81,7 +87,16 @@ export function buildSnapshotBundle(input: {
     .filter((item): item is ScoredCandidate => item !== null)
     .map((item) => ({
       ...item,
-      score: Number(scoreCandidate(item.positionYield, item.iv, item.absDelta, input.config).toFixed(4))
+      score: Number(
+        scoreCandidate(
+          item.positionYield,
+          item.iv,
+          item.absDelta,
+          input.spotPrice,
+          item.strike,
+          input.config
+        ).toFixed(4)
+      )
     }));
 
   const strictCandidates = enrichedCandidates
@@ -119,6 +134,8 @@ export function buildSnapshotBundle(input: {
       assignmentProbabilityProxy: item.assignmentProbabilityProxy,
       instrumentName: item.instrumentName,
       source: item.source,
+      effectiveBuyPrice: item.effectiveBuyPrice,
+      priceDiscount: item.priceDiscount,
       passesStrictFilters: passesStrategyFilters(
         {
           iv: item.iv,
@@ -196,7 +213,9 @@ export function buildSnapshotBundle(input: {
       score: item.score,
       assignmentProbabilityProxy: item.assignmentProbabilityProxy,
       instrumentName: item.instrumentName,
-      source: item.source
+      source: item.source,
+      effectiveBuyPrice: item.effectiveBuyPrice,
+      priceDiscount: item.priceDiscount
     }));
 
   const market: MarketSnapshot = {

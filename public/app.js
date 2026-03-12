@@ -81,6 +81,8 @@ function renderRecommendations(data) {
             ["Strike", `$${number(item.strike)}`],
             ["DTE", `${item.dte} days`],
             ["Premium", `$${number(item.premium)}`],
+            ["Effective Buy", `$${number(item.effectiveBuyPrice)}`],
+            ["Price Discount", percent(item.priceDiscount)],
             ["IV", percent(item.iv)],
             ["Delta", number(item.delta, 4)],
             ["Yield", percent(item.positionYield)],

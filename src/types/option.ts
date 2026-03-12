@@ -25,6 +25,8 @@ export interface RecommendationItem {
   assignmentProbabilityProxy: number;
   instrumentName: string;
   source: string;
+  effectiveBuyPrice: number;  // 如果行权，实际买入价格 = strike - premium
+  priceDiscount: number;      // 相对现价的折扣率
 }
 
 export interface OptionSnapshotItem {
@@ -42,4 +44,6 @@ export interface OptionSnapshotItem {
   instrumentName: string;
   source: string;
   passesStrictFilters: boolean;
+  effectiveBuyPrice: number;  // 如果行权，实际买入价格 = strike - premium
+  priceDiscount: number;      // 相对现价的折扣率
 }

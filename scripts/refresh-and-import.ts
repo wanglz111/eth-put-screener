@@ -4,6 +4,7 @@ import { fetchEthOptionChain } from "../src/providers/options";
 import { fetchEthSpotPrice } from "../src/providers/spot";
 import { estimateMarketIv } from "../src/providers/volatility";
 import { getDeribitAuthHeaders } from "../src/providers/deribit";
+import { fetchRiskFreeRateWithFallback } from "../src/services/riskFreeRate";
 import { DEFAULT_CONFIG, type Env } from "../src/types/env";
 import { buildSnapshotBundle } from "../src/services/screener";
 
@@ -64,19 +65,18 @@ async function main() {
     DERIBIT_API_BASE: process.env.DERIBIT_API_BASE,
     DERIBIT_CLIENT_ID: process.env.DERIBIT_CLIENT_ID,
     DERIBIT_CLIENT_SECRET: process.env.DERIBIT_CLIENT_SECRET,
-    RISK_FREE_RATE: process.env.RISK_FREE_RATE ?? "0.02",
     UNDERLYING: process.env.UNDERLYING ?? "ETH"
   };
 
   const provider = "deribit";
   const startedAt = new Date().toISOString();
   const deribitHeaders = await getDeribitAuthHeaders(env);
-  const [spotPrice, optionChain] = await Promise.all([
+  const [spotPrice, optionChain, riskFreeRate] = await Promise.all([
     fetchEthSpotPrice(env, deribitHeaders),
-    fetchEthOptionChain(env, deribitHeaders)
+    fetchEthOptionChain(env, deribitHeaders),
+    fetchRiskFreeRateWithFallback(0.02)
   ]);
 
-  const riskFreeRate = Number(env.RISK_FREE_RATE ?? "0.02");
   const bundle = buildSnapshotBundle({
     startedAt,
     provider,
@@ -84,7 +84,7 @@ async function main() {
     spotPrice,
     optionChain,
     marketIv: estimateMarketIv(optionChain),
-    riskFreeRate: Number.isFinite(riskFreeRate) ? riskFreeRate : 0.02,
+    riskFreeRate,
     config: DEFAULT_CONFIG
   });
 

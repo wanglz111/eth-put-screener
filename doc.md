@@ -377,7 +377,7 @@ interface MarketDataProvider {
 
 - Spot 和 Option Chain 可以来自不同 Provider
 - IV 如果期权链已给出合约 IV，优先使用合约级数据
-- `risk_free_rate` MVP 可先写成环境变量或配置值
+- `risk_free_rate` 从 US Treasury Fiscal Data API 实时获取（Treasury Bills 平均利率），失败时回退到默认值 0.02
 
 ## 11. KV 数据模型建议
 
