@@ -21,6 +21,7 @@
 	"vars": {
 		"DERIBIT_API_BASE": "https://www.deribit.com",
 		"RISK_FREE_RATE": "0.02",
-		"UNDERLYING": "ETH"
+		"UNDERLYING": "ETH",
+		"MANUAL_REFRESH_TOKEN": "your-secret-token-here"
 	}
 }

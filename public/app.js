@@ -2,6 +2,7 @@ const marketEl = document.getElementById("market");
 const recommendationsEl = document.getElementById("recommendations");
 const statusEl = document.getElementById("status");
 const reloadButton = document.getElementById("reload-button");
+const forceRefreshButton = document.getElementById("force-refresh-button");
 
 function percent(value) {
   if (value === null || value === undefined) {
@@ -122,8 +123,49 @@ async function loadDashboard() {
   }
 }
 
+async function forceRefresh() {
+  const token = prompt("Enter refresh token:");
+  if (!token) {
+    return;
+  }
+
+  forceRefreshButton.disabled = true;
+  forceRefreshButton.textContent = "Refreshing...";
+
+  try {
+    const response = await fetch("/api/refresh", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Accept": "application/json"
+      }
+    });
+
+    const payload = await response.json();
+
+    if (!response.ok || !payload.ok) {
+      const message = payload.message || `Refresh failed with status ${response.status}`;
+      alert(`Error: ${message}`);
+      return;
+    }
+
+    alert("Data refreshed successfully!");
+    await loadDashboard();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown refresh error";
+    alert(`Error: ${message}`);
+  } finally {
+    forceRefreshButton.disabled = false;
+    forceRefreshButton.textContent = "Force Refresh Data";
+  }
+}
+
 reloadButton.addEventListener("click", () => {
   loadDashboard();
+});
+
+forceRefreshButton.addEventListener("click", () => {
+  forceRefresh();
 });
 
 loadDashboard();
